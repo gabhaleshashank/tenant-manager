@@ -319,6 +319,11 @@ a {
   background: rgba(15, 23, 42, 0.96);
 }
 
+.table-wrapper-scroll {
+  max-height: 210px; /* roughly 4 rows plus header */
+  overflow: auto;
+}
+
 table {
   width: 100%;
   border-collapse: collapse;

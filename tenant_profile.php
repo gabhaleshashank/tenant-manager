@@ -181,7 +181,7 @@ include __DIR__ . '/includes/header.php';
     <div class="grid-two">
         <div>
             <h3 style="font-size: 0.95rem; margin: 0.2rem 0 0.5rem;">Rent history</h3>
-            <div class="table-wrapper">
+            <div class="table-wrapper table-wrapper-scroll">
                 <table>
                     <thead>
                     <tr>
@@ -268,7 +268,7 @@ include __DIR__ . '/includes/header.php';
 
         <div>
             <h3 style="font-size: 0.95rem; margin: 0.2rem 0 0.5rem;">Electricity bills</h3>
-            <div class="table-wrapper">
+            <div class="table-wrapper table-wrapper-scroll">
                 <table>
                     <thead>
                     <tr>
