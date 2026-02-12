@@ -200,7 +200,16 @@ include __DIR__ . '/includes/header.php';
                         <?php foreach ($rents as $rent): ?>
                             <tr>
                                 <td>
-                                    <?php echo sprintf('%02d/%d', (int)$rent['rent_month'], (int)$rent['rent_year']); ?>
+                                    <?php
+                                    $monthIndex = (int)$rent['rent_month'];
+                                    $monthNames = [
+                                        1 => 'January', 2 => 'February', 3 => 'March', 4 => 'April',
+                                        5 => 'May', 6 => 'June', 7 => 'July', 8 => 'August',
+                                        9 => 'September', 10 => 'October', 11 => 'November', 12 => 'December',
+                                    ];
+                                    $label = ($monthNames[$monthIndex] ?? $monthIndex) . ' ' . (int)$rent['rent_year'];
+                                    echo htmlspecialchars($label);
+                                    ?>
                                 </td>
                                 <td><?php echo htmlspecialchars($rent['date_given']); ?></td>
                                 <td><?php echo number_format((float)$rent['amount'], 2); ?></td>
@@ -218,9 +227,15 @@ include __DIR__ . '/includes/header.php';
                     <div class="field">
                         <label for="rent_month">Month</label>
                         <select id="rent_month" name="rent_month" data-required="true">
-                            <?php for ($m = 1; $m <= 12; $m++): ?>
-                                <option value="<?php echo $m; ?>"><?php echo $m; ?></option>
-                            <?php endfor; ?>
+                            <?php
+                            $monthNames = [
+                                1 => 'January', 2 => 'February', 3 => 'March', 4 => 'April',
+                                5 => 'May', 6 => 'June', 7 => 'July', 8 => 'August',
+                                9 => 'September', 10 => 'October', 11 => 'November', 12 => 'December',
+                            ];
+                            foreach ($monthNames as $value => $name): ?>
+                                <option value="<?php echo $value; ?>"><?php echo $name; ?></option>
+                            <?php endforeach; ?>
                         </select>
                     </div>
                     <div class="field">
@@ -272,7 +287,16 @@ include __DIR__ . '/includes/header.php';
                         <?php foreach ($bills as $bill): ?>
                             <tr>
                                 <td>
-                                    <?php echo sprintf('%02d/%d', (int)$bill['bill_month'], (int)$bill['bill_year']); ?>
+                                    <?php
+                                    $billMonthIndex = (int)$bill['bill_month'];
+                                    $monthNames = [
+                                        1 => 'January', 2 => 'February', 3 => 'March', 4 => 'April',
+                                        5 => 'May', 6 => 'June', 7 => 'July', 8 => 'August',
+                                        9 => 'September', 10 => 'October', 11 => 'November', 12 => 'December',
+                                    ];
+                                    $label = ($monthNames[$billMonthIndex] ?? $billMonthIndex) . ' ' . (int)$bill['bill_year'];
+                                    echo htmlspecialchars($label);
+                                    ?>
                                 </td>
                                 <td><?php echo htmlspecialchars($bill['date_given']); ?></td>
                                 <td><?php echo ucfirst(htmlspecialchars($bill['paid_by'])); ?></td>
@@ -304,9 +328,15 @@ include __DIR__ . '/includes/header.php';
                     <div class="field">
                         <label for="bill_month">Bill month</label>
                         <select id="bill_month" name="bill_month" data-required="true">
-                            <?php for ($m = 1; $m <= 12; $m++): ?>
-                                <option value="<?php echo $m; ?>"><?php echo $m; ?></option>
-                            <?php endfor; ?>
+                            <?php
+                            $monthNames = [
+                                1 => 'January', 2 => 'February', 3 => 'March', 4 => 'April',
+                                5 => 'May', 6 => 'June', 7 => 'July', 8 => 'August',
+                                9 => 'September', 10 => 'October', 11 => 'November', 12 => 'December',
+                            ];
+                            foreach ($monthNames as $value => $name): ?>
+                                <option value="<?php echo $value; ?>"><?php echo $name; ?></option>
+                            <?php endforeach; ?>
                         </select>
                     </div>
                     <div class="field">
