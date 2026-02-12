@@ -221,7 +221,7 @@ include __DIR__ . '/includes/header.php';
                 </table>
             </div>
 
-            <form method="post" data-validate="true" style="margin-top: 0.75rem;">
+            <form method="post" data-validate="true" class="form-spaced-top">
                 <input type="hidden" name="form_type" value="rent">
                 <div class="form-row">
                     <div class="field">
@@ -322,7 +322,7 @@ include __DIR__ . '/includes/header.php';
                 </table>
             </div>
 
-            <form method="post" data-validate="true" style="margin-top: 0.75rem;">
+            <form method="post" data-validate="true" class="form-spaced-top">
                 <input type="hidden" name="form_type" value="electricity">
                 <div class="form-row">
                     <div class="field">
@@ -415,7 +415,7 @@ include __DIR__ . '/includes/header.php';
             </table>
         </div>
 
-        <form method="post" data-validate="true" style="margin-top: 0.75rem;">
+        <form method="post" data-validate="true" class="form-spaced-top">
             <input type="hidden" name="form_type" value="issue">
             <div class="field">
                 <label for="description">Issue description</label>
