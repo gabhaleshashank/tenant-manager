@@ -23,7 +23,7 @@ include __DIR__ . '/includes/header.php';
             <a href="tenant_form.php" class="btn">Add tenant</a>
         </div>
     </div>
-    <div class="table-wrapper">
+    <div class="table-wrapper table-wrapper-scroll-tenants">
         <table>
             <thead>
             <tr>

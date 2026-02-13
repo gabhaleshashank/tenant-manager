@@ -330,6 +330,11 @@ a {
   overflow: auto;
 }
 
+.table-wrapper-scroll-tenants {
+  max-height: 360px; /* about 5 tenant rows plus header */
+  overflow: auto;
+}
+
 .form-spaced-top {
   margin-top: 1.4rem !important;
 }
