@@ -325,6 +325,11 @@ a {
   overflow: auto;
 }
 
+.table-wrapper-scroll-issues {
+  max-height: 180px; /* about 3 issue rows plus header */
+  overflow: auto;
+}
+
 .form-spaced-top {
   margin-top: 1.4rem !important;
 }

@@ -386,7 +386,7 @@ include __DIR__ . '/includes/header.php';
 
     <div style="margin-top: 1.5rem;">
         <h3 style="font-size: 0.95rem; margin: 0.2rem 0 0.5rem;">Issues</h3>
-        <div class="table-wrapper">
+        <div class="table-wrapper table-wrapper-scroll-issues">
             <table>
                 <thead>
                 <tr>
