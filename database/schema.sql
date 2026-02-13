@@ -25,6 +25,7 @@ CREATE TABLE IF NOT EXISTS tenants (
   address VARCHAR(255) NOT NULL,
   property_name VARCHAR(150) NOT NULL,
   monthly_rent DECIMAL(10,2) NOT NULL,
+  deposit DECIMAL(10,2) NOT NULL DEFAULT 0.00,
   move_in_date DATE NOT NULL,
   status ENUM('active', 'moved_out') NOT NULL DEFAULT 'active',
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP

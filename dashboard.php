@@ -19,7 +19,7 @@ $activeTenants = (int)$pdo->query("SELECT COUNT(*) FROM tenants WHERE status = '
 $movedOut = (int)$pdo->query("SELECT COUNT(*) FROM tenants WHERE status = 'moved_out'")->fetchColumn();
 
 // Last 5 tenants
-$recentStmt = $pdo->query('SELECT id, full_name, property_name, monthly_rent, status, created_at FROM tenants ORDER BY created_at DESC LIMIT 5');
+$recentStmt = $pdo->query('SELECT id, full_name, property_name, monthly_rent, deposit, status, created_at FROM tenants ORDER BY created_at DESC LIMIT 5');
 $recentTenants = $recentStmt->fetchAll();
 
 include __DIR__ . '/includes/header.php';
@@ -75,6 +75,7 @@ include __DIR__ . '/includes/header.php';
                 <th>Name</th>
                 <th>Property</th>
                 <th>Monthly rent</th>
+                <th>Deposit</th>
                 <th>Status</th>
                 <th>Created</th>
             </tr>
@@ -93,7 +94,12 @@ include __DIR__ . '/includes/header.php';
                             </a>
                         </td>
                         <td><?php echo htmlspecialchars($tenant['property_name']); ?></td>
-                        <td><?php echo number_format((float)$tenant['monthly_rent'], 2); ?></td>
+                        <td>
+                            <?php echo htmlspecialchars(number_format((float)$tenant['monthly_rent'], 0, '.', '')); ?>
+                        </td>
+                        <td>
+                            <?php echo htmlspecialchars(number_format((float)($tenant['deposit'] ?? 0), 0, '.', '')); ?>
+                        </td>
                         <td>
                             <?php if ($tenant['status'] === 'active'): ?>
                                 <span class="pill pill-active">Active</span>

@@ -152,7 +152,8 @@ include __DIR__ . '/includes/header.php';
             <div class="card-title"><?php echo htmlspecialchars($tenant['full_name']); ?></div>
             <div class="card-subtitle">
                 Property: <?php echo htmlspecialchars($tenant['property_name']); ?> ·
-                Rent: <?php echo number_format((float)$tenant['monthly_rent'], 2); ?> ·
+                Rent: <?php echo htmlspecialchars(number_format((float)$tenant['monthly_rent'], 0, '.', '')); ?> ·
+                Deposit: <?php echo htmlspecialchars(number_format((float)($tenant['deposit'] ?? 0), 0, '.', '')); ?> ·
                 Status:
                 <?php if ($tenant['status'] === 'active'): ?>
                     <span class="pill pill-active">Active</span>
@@ -212,7 +213,7 @@ include __DIR__ . '/includes/header.php';
                                     ?>
                                 </td>
                                 <td><?php echo htmlspecialchars($rent['date_given']); ?></td>
-                                <td><?php echo number_format((float)$rent['amount'], 2); ?></td>
+                                <td><?php echo htmlspecialchars(number_format((float)$rent['amount'], 0, '.', '')); ?></td>
                                 <td><?php echo ucfirst(htmlspecialchars($rent['mode'])); ?></td>
                             </tr>
                         <?php endforeach; ?>

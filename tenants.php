@@ -8,7 +8,7 @@ require_once __DIR__ . '/includes/auth.php';
 require_login();
 
 $pdo = getPDO();
-$stmt = $pdo->query('SELECT id, full_name, phone, email, property_name, monthly_rent, status FROM tenants ORDER BY full_name ASC');
+$stmt = $pdo->query('SELECT id, full_name, phone, email, property_name, monthly_rent, deposit, status FROM tenants ORDER BY full_name ASC');
 $tenants = $stmt->fetchAll();
 
 include __DIR__ . '/includes/header.php';
@@ -31,6 +31,7 @@ include __DIR__ . '/includes/header.php';
                 <th>Contact</th>
                 <th>Property</th>
                 <th>Rent</th>
+                <th>Deposit</th>
                 <th>Status</th>
                 <th>Actions</th>
             </tr>
@@ -55,7 +56,8 @@ include __DIR__ . '/includes/header.php';
                             <?php endif; ?>
                         </td>
                         <td><?php echo htmlspecialchars($tenant['property_name']); ?></td>
-                        <td><?php echo number_format((float)$tenant['monthly_rent'], 2); ?></td>
+                        <td><?php echo htmlspecialchars(number_format((float)$tenant['monthly_rent'], 0, '.', '')); ?></td>
+                        <td><?php echo htmlspecialchars(number_format((float)$tenant['deposit'], 0, '.', '')); ?></td>
                         <td>
                             <?php if ($tenant['status'] === 'active'): ?>
                                 <span class="pill pill-active">Active</span>

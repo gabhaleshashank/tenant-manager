@@ -21,6 +21,7 @@ $tenant = [
     'address' => '',
     'property_name' => '',
     'monthly_rent' => '',
+    'deposit' => '',
     'move_in_date' => date('Y-m-d'),
     'status' => 'active',
 ];
@@ -44,6 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $tenant['address'] = trim($_POST['address'] ?? '');
     $tenant['property_name'] = trim($_POST['property_name'] ?? '');
     $tenant['monthly_rent'] = trim($_POST['monthly_rent'] ?? '');
+    $tenant['deposit'] = trim($_POST['deposit'] ?? '');
     $tenant['move_in_date'] = trim($_POST['move_in_date'] ?? '');
     $tenant['status'] = $_POST['status'] ?? 'active';
 
@@ -53,6 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $tenant['address'] === '' ||
         $tenant['property_name'] === '' ||
         $tenant['monthly_rent'] === '' ||
+        $tenant['deposit'] === '' ||
         $tenant['move_in_date'] === ''
     ) {
         $error = 'Please fill in all required fields.';
@@ -66,6 +69,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                      address = :address,
                      property_name = :property_name,
                      monthly_rent = :monthly_rent,
+                     deposit = :deposit,
                      move_in_date = :move_in_date,
                      status = :status
                  WHERE id = :id'
@@ -77,6 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'address' => $tenant['address'],
                 'property_name' => $tenant['property_name'],
                 'monthly_rent' => $tenant['monthly_rent'],
+                'deposit' => $tenant['deposit'],
                 'move_in_date' => $tenant['move_in_date'],
                 'status' => $tenant['status'],
                 'id' => $id,
@@ -85,9 +90,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             $stmt = $pdo->prepare(
                 'INSERT INTO tenants
-                 (full_name, phone, email, address, property_name, monthly_rent, move_in_date, status)
+                 (full_name, phone, email, address, property_name, monthly_rent, deposit, move_in_date, status)
                  VALUES
-                 (:full_name, :phone, :email, :address, :property_name, :monthly_rent, :move_in_date, :status)'
+                 (:full_name, :phone, :email, :address, :property_name, :monthly_rent, :deposit, :move_in_date, :status)'
             );
             $stmt->execute([
                 'full_name' => $tenant['full_name'],
@@ -96,6 +101,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'address' => $tenant['address'],
                 'property_name' => $tenant['property_name'],
                 'monthly_rent' => $tenant['monthly_rent'],
+                'deposit' => $tenant['deposit'],
                 'move_in_date' => $tenant['move_in_date'],
                 'status' => $tenant['status'],
             ]);
@@ -173,13 +179,18 @@ include __DIR__ . '/includes/header.php';
                            value="<?php echo htmlspecialchars((string)$tenant['monthly_rent']); ?>">
                 </div>
                 <div class="field">
-                    <label for="move_in_date" id="move_date_label">Move-in date</label>
-                    <input type="date" id="move_in_date" name="move_in_date" data-required="true"
-                           value="<?php echo htmlspecialchars($tenant['move_in_date']); ?>">
-                    <span class="helper-text" id="move_date_help">
-                        Set the date the tenant first occupies the unit.
-                    </span>
+                    <label for="deposit">Deposit</label>
+                    <input type="number" step="0.01" id="deposit" name="deposit" data-required="true"
+                           value="<?php echo htmlspecialchars((string)$tenant['deposit']); ?>">
                 </div>
+            </div>
+            <div class="field">
+                <label for="move_in_date" id="move_date_label">Move-in date</label>
+                <input type="date" id="move_in_date" name="move_in_date" data-required="true"
+                       value="<?php echo htmlspecialchars($tenant['move_in_date']); ?>">
+                <span class="helper-text" id="move_date_help">
+                    Set the date the tenant first occupies the unit.
+                </span>
             </div>
             <div class="field">
                 <label for="status">Status</label>
