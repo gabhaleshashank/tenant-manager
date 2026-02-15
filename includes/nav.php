@@ -4,10 +4,10 @@ require_once __DIR__ . '/auth.php';
 $is_logged_in = !empty($_SESSION['user_id']);
 ?>
 <header class="app-header">
-    <div class="app-brand">
+    <a href="<?php echo $is_logged_in ? 'dashboard.php' : 'index.php'; ?>" class="app-brand">
         <span class="logo-circle">T</span>
         <span class="logo-text">Tenant Manager</span>
-    </div>
+    </a>
     <nav class="app-nav">
         <?php if ($is_logged_in): ?>
             <a href="dashboard.php">Dashboard</a>
