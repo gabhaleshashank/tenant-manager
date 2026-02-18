@@ -28,6 +28,10 @@ CREATE TABLE IF NOT EXISTS tenants (
   deposit DECIMAL(10,2) NOT NULL DEFAULT 0.00,
   move_in_date DATE NOT NULL,
   status ENUM('active', 'moved_out') NOT NULL DEFAULT 'active',
+  agreement_document VARCHAR(255) DEFAULT NULL,
+  passport_photo VARCHAR(255) DEFAULT NULL,
+  aadhar_card VARCHAR(255) DEFAULT NULL,
+  pan_card VARCHAR(255) DEFAULT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB;
 

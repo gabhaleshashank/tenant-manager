@@ -10,7 +10,9 @@ The **Tenant Management System** is a web-based application for managing tenants
   - Session-based access control for protected pages
 
 - **Tenant management**
-  - Add new tenants (name, contact, property, rent amount)
+  - Add new tenants (name, contact, property, rent amount, deposit)
+  - Upload tenant documents: agreement (PDF), passport photo, Aadhar card, PAN card (PDF or image)
+  - View and download documents (opens in new tab)
   - View a list of all tenants
   - Edit tenant details
   - Delete tenant records
@@ -64,6 +66,15 @@ tenant-manager/
        ```bash
        mysql -u your_user -p tenant_manager < database/schema.sql
        ```
+   - **If you already have the database** and are adding document upload support, run:
+     ```sql
+     ALTER TABLE tenants
+       ADD COLUMN agreement_document VARCHAR(255) DEFAULT NULL AFTER status,
+       ADD COLUMN passport_photo VARCHAR(255) DEFAULT NULL AFTER agreement_document,
+       ADD COLUMN aadhar_card VARCHAR(255) DEFAULT NULL AFTER passport_photo,
+       ADD COLUMN pan_card VARCHAR(255) DEFAULT NULL AFTER aadhar_card;
+     ```
+   - Ensure the `uploads` directory exists and is writable (uploads are stored under `uploads/tenants/<id>/`).
 
 3. **Configure database connection**:
    - Open `config/db.php`.

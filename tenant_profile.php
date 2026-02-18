@@ -179,6 +179,39 @@ include __DIR__ . '/includes/header.php';
         </div>
     <?php endif; ?>
 
+    <?php
+    $docLabels = [
+        'agreement_document' => 'Agreement',
+        'passport_photo' => 'Passport photo',
+        'aadhar_card' => 'Aadhar card',
+        'pan_card' => 'PAN card',
+    ];
+    $docTypes = ['agreement_document', 'passport_photo', 'aadhar_card', 'pan_card'];
+    $hasDocs = false;
+    foreach ($docTypes as $dt) {
+        if (!empty($tenant[$dt])) {
+            $hasDocs = true;
+            break;
+        }
+    }
+    ?>
+    <?php if ($hasDocs): ?>
+        <div class="documents-section">
+            <h3 style="font-size: 0.95rem; margin: 0.2rem 0 0.5rem;">Documents</h3>
+            <div class="documents-list">
+                <?php foreach ($docTypes as $docType): ?>
+                    <?php if (!empty($tenant[$docType])): ?>
+                        <div class="document-item">
+                            <span class="document-label"><?php echo htmlspecialchars($docLabels[$docType]); ?></span>
+                            <a href="view_document.php?tenant_id=<?php echo $tenantId; ?>&type=<?php echo urlencode($docType); ?>&disposition=inline" target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-sm">View</a>
+                            <a href="view_document.php?tenant_id=<?php echo $tenantId; ?>&type=<?php echo urlencode($docType); ?>&disposition=attachment" target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-sm">Download</a>
+                        </div>
+                    <?php endif; ?>
+                <?php endforeach; ?>
+            </div>
+        </div>
+    <?php endif; ?>
+
     <div class="grid-two">
         <div>
             <h3 style="font-size: 0.95rem; margin: 0.2rem 0 0.5rem;">Rent history</h3>

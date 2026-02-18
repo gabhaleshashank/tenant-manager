@@ -11,6 +11,14 @@ $pdo = getPDO();
 $error = '';
 $success = '';
 
+$uploadDir = __DIR__ . '/uploads';
+$allowedDocTypes = [
+    'agreement_document' => ['pdf'],
+    'passport_photo'     => ['pdf', 'jpg', 'jpeg', 'png'],
+    'aadhar_card'        => ['pdf', 'jpg', 'jpeg', 'png'],
+    'pan_card'           => ['pdf', 'jpg', 'jpeg', 'png'],
+];
+
 $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 $isEdit = $id > 0;
 
@@ -24,6 +32,10 @@ $tenant = [
     'deposit' => '',
     'move_in_date' => date('Y-m-d'),
     'status' => 'active',
+    'agreement_document' => null,
+    'passport_photo' => null,
+    'aadhar_card' => null,
+    'pan_card' => null,
 ];
 
 if ($isEdit) {
@@ -60,6 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     ) {
         $error = 'Please fill in all required fields.';
     } else {
+        $tenantId = $id;
         if ($isEdit) {
             $stmt = $pdo->prepare(
                 'UPDATE tenants
@@ -105,8 +118,46 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'move_in_date' => $tenant['move_in_date'],
                 'status' => $tenant['status'],
             ]);
-            // Redirect to dashboard with a one-time success message
+            $tenantId = (int)$pdo->lastInsertId();
             $_SESSION['flash_success'] = 'Tenant added successfully!';
+        }
+
+        $tenantDir = $uploadDir . '/tenants/' . $tenantId;
+        if (!is_dir($tenantDir)) {
+            @mkdir($tenantDir, 0755, true);
+        }
+
+        $docUpdates = [];
+        foreach ($allowedDocTypes as $field => $exts) {
+            if (!empty($_FILES[$field]['tmp_name']) && is_uploaded_file($_FILES[$field]['tmp_name'])) {
+                $ext = strtolower(pathinfo($_FILES[$field]['name'], PATHINFO_EXTENSION));
+                if (!in_array($ext, $exts, true)) {
+                    $error = 'Invalid file type for ' . str_replace('_', ' ', $field) . '. Allowed: ' . implode(', ', $exts);
+                    break;
+                }
+                $safeName = $field . '_' . preg_replace('/[^a-zA-Z0-9._-]/', '', basename($_FILES[$field]['name']));
+                if (strlen($safeName) > 200) {
+                    $safeName = $field . '_' . time() . '.' . $ext;
+                }
+                $dest = $tenantDir . '/' . $safeName;
+                if (move_uploaded_file($_FILES[$field]['tmp_name'], $dest)) {
+                    $docUpdates[$field] = 'tenants/' . $tenantId . '/' . $safeName;
+                }
+            }
+        }
+
+        if ($error === '' && !empty($docUpdates)) {
+            $setParts = [];
+            $params = [];
+            foreach ($docUpdates as $k => $v) {
+                $setParts[] = $k . ' = :' . $k;
+                $params[$k] = $v;
+            }
+            $params['id'] = $tenantId;
+            $pdo->prepare('UPDATE tenants SET ' . implode(', ', $setParts) . ' WHERE id = :id')->execute($params);
+        }
+
+        if (!$isEdit && $error === '') {
             header('Location: dashboard.php');
             exit;
         }
@@ -140,7 +191,7 @@ include __DIR__ . '/includes/header.php';
         </div>
     <?php endif; ?>
 
-    <form method="post" data-validate="true">
+    <form method="post" data-validate="true" enctype="multipart/form-data">
         <div class="form">
             <div class="form-row">
                 <div class="field">
@@ -201,6 +252,64 @@ include __DIR__ . '/includes/header.php';
                     </option>
                 </select>
             </div>
+
+            <h3 class="form-section-title">Documents (optional)</h3>
+            <p class="helper-text">Upload agreement and ID documents. Agreement: PDF only. Others: PDF or image (JPG, PNG).</p>
+            <div class="form-row">
+                <div class="field">
+                    <label for="agreement_document">Agreement (PDF)</label>
+                    <input type="file" id="agreement_document" name="agreement_document" accept=".pdf,application/pdf">
+                </div>
+                <div class="field">
+                    <label for="passport_photo">Passport size photo</label>
+                    <input type="file" id="passport_photo" name="passport_photo" accept=".pdf,.jpg,.jpeg,.png,application/pdf,image/jpeg,image/png">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="field">
+                    <label for="aadhar_card">Aadhar card</label>
+                    <input type="file" id="aadhar_card" name="aadhar_card" accept=".pdf,.jpg,.jpeg,.png,application/pdf,image/jpeg,image/png">
+                </div>
+                <div class="field">
+                    <label for="pan_card">PAN card</label>
+                    <input type="file" id="pan_card" name="pan_card" accept=".pdf,.jpg,.jpeg,.png,application/pdf,image/jpeg,image/png">
+                </div>
+            </div>
+
+            <?php if ($isEdit): ?>
+                <?php
+                $docLabels = [
+                    'agreement_document' => 'Agreement',
+                    'passport_photo' => 'Passport photo',
+                    'aadhar_card' => 'Aadhar card',
+                    'pan_card' => 'PAN card',
+                ];
+                $hasDocs = false;
+                foreach (array_keys($allowedDocTypes) as $docType) {
+                    if (!empty($tenant[$docType])) {
+                        $hasDocs = true;
+                        break;
+                    }
+                }
+                ?>
+                <?php if ($hasDocs): ?>
+                    <div class="documents-current">
+                        <h4 class="documents-heading">Uploaded documents</h4>
+                        <div class="documents-list">
+                            <?php foreach (array_keys($allowedDocTypes) as $docType): ?>
+                                <?php if (!empty($tenant[$docType])): ?>
+                                    <div class="document-item">
+                                        <span class="document-label"><?php echo htmlspecialchars($docLabels[$docType]); ?></span>
+                                        <a href="view_document.php?tenant_id=<?php echo (int)$id; ?>&type=<?php echo urlencode($docType); ?>&disposition=inline" target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-sm">View</a>
+                                        <a href="view_document.php?tenant_id=<?php echo (int)$id; ?>&type=<?php echo urlencode($docType); ?>&disposition=attachment" target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-sm">Download</a>
+                                    </div>
+                                <?php endif; ?>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
+                <?php endif; ?>
+            <?php endif; ?>
+
             <button type="submit" class="btn">
                 <?php echo $isEdit ? 'Save changes' : 'Create tenant'; ?>
             </button>
